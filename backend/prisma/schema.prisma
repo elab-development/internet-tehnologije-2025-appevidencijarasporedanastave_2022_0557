@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PROFESSOR
+  STUDENT
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+enum ClassType {
+  LECTURE
+  PRACTICE
+  LAB
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String    @unique
+  password      String
+  role          Role
+
+  studentIndex  String?
+  studyYear     Int?
+
+  subjects      Subject[]    @relation("ProfessorSubjects")
+  enrollments   Enrollment[]
+  attendances   Attendance[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Subject {
+  id           Int       @id @default(autoincrement())
+  name         String
+  code         String    @unique
+  espb         Int
+
+  professorId  Int
+  professor    User      @relation("ProfessorSubjects", fields: [professorId], references: [id])
+
+  enrollments  Enrollment[]
+  terms        Term[]
+}
+
+model Enrollment {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  subjectId  Int
+
+  user       User     @relation(fields: [userId], references: [id])
+  subject    Subject  @relation(fields: [subjectId], references: [id])
+
+  @@unique([userId, subjectId])
+}
+
+model Term {
+  id          Int       @id @default(autoincrement())
+  subjectId   Int
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  classroom   String
+  type        ClassType
+
+  subject     Subject   @relation(fields: [subjectId], references: [id])
+  attendances Attendance[]
+}
+
+model Attendance {
+  id          Int              @id @default(autoincrement())
+  userId      Int
+  termId      Int
+  status      AttendanceStatus
+  checkedInAt DateTime         @default(now())
+
+  user        User             @relation(fields: [userId], references: [id])
+  term        Term             @relation(fields: [termId], references: [id])
+
+  @@unique([userId, termId])
+}
