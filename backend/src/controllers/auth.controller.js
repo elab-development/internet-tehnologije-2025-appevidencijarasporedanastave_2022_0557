@@ -1,5 +1,6 @@
 import * as authService from '../services/auth.service.js';
-import { success, error } from '../utils/response.js';
+import { success, error } from '../utils/response.js'
+import { generateToken } from '../utils/jwt.js';
 
 export const login = async (req, res) => {
   try {
@@ -11,7 +12,12 @@ export const login = async (req, res) => {
 
     const user = await authService.loginUser(email, password);
 
-    return success(res, user, 'Login successful');
+    const token = generateToken({
+      id: user.id,
+      role: user.role
+    });
+
+    return success(res, { user, token }, 'Login successful');
   } catch (err) {
     return error(res, err.message, 401);
   }
