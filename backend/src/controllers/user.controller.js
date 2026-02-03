@@ -1,6 +1,16 @@
 import * as userService from '../services/user.service.js';
 import { success, error } from '../utils/response.js';
 
+export const getMyProfile = async (req, res) => {
+  try {
+    const user = await userService.getUserById(req.user.id);
+    return success(res, user, 'Profile fetched successfully');
+  } catch (err) {
+    return error(res, err.message);
+  }
+};
+
+
 export const updateMyAccount = async (req, res) => {
   try {
     const userId = req.user.id;

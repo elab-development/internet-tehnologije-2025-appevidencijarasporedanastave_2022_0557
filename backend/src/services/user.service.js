@@ -1,6 +1,25 @@
 import prisma from '../utils/prisma.js'
 import bcrypt from "bcrypt";
 
+export const getUserById = async (id) => {
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      username: true,
+      role: true,
+      studentIndex: true,
+      studyYear: true,
+      idGroup: true,
+      createdAt: true
+    }
+  });
+};
+
+
 export const updateUser = async (userId, data) => {
   const updateData = {};
   const id = Number(userId);

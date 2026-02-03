@@ -22,6 +22,7 @@ enum Role {
 enum AttendanceStatus {
   PRESENT
   ABSENT
+  NOT_SELECTED
 }
 
 enum ClassType {
@@ -41,9 +42,9 @@ model User {
 
   studentIndex  String?
   studyYear     Int?
+  idGroup       Int?
 
-  subjects      Subject[]    @relation("ProfessorSubjects")
-  enrollments   Enrollment[]
+  terms         Term[]
   attendances   Attendance[]
 
   createdAt     DateTime?  @default(now())
@@ -54,35 +55,22 @@ model Subject {
   id           Int       @id @default(autoincrement())
   name         String
   espb         Int
-
-  professorId  Int
-  professor    User      @relation("ProfessorSubjects", fields: [professorId], references: [id])
-
-  enrollments  Enrollment[]
   terms        Term[]
-}
-
-model Enrollment {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  subjectId  Int
-
-  user       User     @relation(fields: [userId], references: [id])
-  subject    Subject  @relation(fields: [subjectId], references: [id])
-
-  @@unique([userId, subjectId])
 }
 
 model Term {
   id          Int       @id @default(autoincrement())
   subjectId   Int
+  professorId Int
   date        DateTime
   startTime   DateTime
   endTime     DateTime
   classroom   String
   type        ClassType
+  idGroup     Int
 
   subject     Subject   @relation(fields: [subjectId], references: [id])
+  professor   User      @relation(fields: [professorId], references: [id])
   attendances Attendance[]
 }
 
@@ -97,4 +85,9 @@ model Attendance {
   term        Term             @relation(fields: [termId], references: [id])
 
   @@unique([userId, termId])
+}
+
+model Group{
+  id          Int              @id @default(autoincrement())
+  name        String
 }
