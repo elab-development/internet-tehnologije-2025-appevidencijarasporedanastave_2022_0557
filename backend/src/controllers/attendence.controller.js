@@ -4,15 +4,14 @@ import { success, error } from '../utils/response.js'
 export const markAttendance = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { termId, status } = req.body;
+    const termId = parseInt(req.params.termId);
 
     const attendance = await attendanceService.markAttendance(
       userId,
-      termId,
-      status
+      termId
     );
 
-    return success(res, attendance, "Attendance recorded");
+    return success(res, attendance, 'Attendance marked as PRESENT');
   } catch (err) {
     return error(res, err.message);
   }

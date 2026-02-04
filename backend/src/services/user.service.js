@@ -23,6 +23,52 @@ export const getAllUsers = () => {
   });
 };
 
+export const createUser = async (data) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    username,
+    password,
+    role,
+    studentIndex,
+    studyYear,
+    idGroup
+  } = data;
+
+  if (!firstName || !lastName || !email || !username || !password || !role) {
+    throw new Error('Missing required fields');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  return prisma.user.create({
+    data: {
+      firstName,
+      lastName,
+      email,
+      username,
+      password: hashedPassword,
+      role,
+      studentIndex: role === 'STUDENT' ? studentIndex : null,
+      studyYear: role === 'STUDENT' ? studyYear : null,
+      idGroup: role === 'STUDENT' ? idGroup : null
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      username: true,
+      role: true,
+      studentIndex: true,
+      studyYear: true,
+      idGroup: true,
+      createdAt: true
+    }
+  });
+};
+
 export const getUserById = async (id) => {
   return prisma.user.findUnique({
     where: { id },

@@ -1,22 +1,33 @@
 import prisma from "../utils/prisma.js";
 
-export const markAttendance = async (userId, termId, status) => {
-  const existing = await prisma.attendance.findFirst({
+export const markAttendance = async (userId, termId) => {
+  const attendance = await prisma.attendance.findUnique({
     where: {
-      userId,
-      termId
+      userId_termId: {
+        userId,
+        termId
+      }
     }
   });
 
-  if (existing) {
-    throw new Error("Attendance already marked for this term");
+  if (!attendance) {
+    throw new Error('Attendance record does not exist for this term');
   }
 
-  return prisma.attendance.create({
+  if (attendance.status === 'PRESENT') {
+    throw new Error('Attendance already marked as PRESENT');
+  }
+
+  return prisma.attendance.update({
+    where: {
+      userId_termId: {
+        userId,
+        termId
+      }
+    },
     data: {
-      userId,
-      termId,
-      status
+      status: 'PRESENT',
+      checkedInAt: new Date()
     }
   });
 };

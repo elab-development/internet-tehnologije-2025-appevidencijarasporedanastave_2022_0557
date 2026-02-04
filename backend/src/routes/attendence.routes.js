@@ -4,7 +4,7 @@ import {markAttendance,getMyAttendance} from "../controllers/attendence.controll
 
 const router = express.Router();
 
-router.post("/", authenticate, markAttendance);
+router.patch("/:termId",authenticate,markAttendance);
 
 router.get("/me", authenticate, getMyAttendance);
 
