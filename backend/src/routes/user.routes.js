@@ -5,6 +5,7 @@ import {
   deleteAccount,
   searchUsers,
   getMyProfile,
+  getAllUsers
 } from "../controllers/user.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { authorizeAdmin } from "../middlewares/role.middleware.js";
@@ -18,5 +19,6 @@ router.delete("/:id", authenticate, authorizeAdmin, deleteAccount);
 router.get("/search", authenticate, authorizeAdmin, searchUsers);
 
 router.get("/me", authenticate, getMyProfile);
+router.get("/", authenticate,authorizeAdmin, getAllUsers);
 
 export default router;

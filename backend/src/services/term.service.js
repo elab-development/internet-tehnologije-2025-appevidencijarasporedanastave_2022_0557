@@ -1,30 +1,15 @@
 import prisma from "../utils/prisma.js";
 
-export const getStudentTerms = async (groupId) => {
+export const getStudentTerms = async (groupId,userId) => {
   console.log("groupd id is = " + groupId);
   if (!groupId) return [];
 
-  return prisma.term.findMany({
+  return prisma.attendance.findMany({
     where: {
-      idGroup: groupId,
-    },
-    include: {
-      subject: {
-        select: {
-          id: true,
-          name: true,
-        },
+      userId,
+      term: {
+        idGroup: groupId,
       },
-      professor: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-        },
-      },
-    },
-    orderBy: {
-      date: "asc",
     },
   });
 };

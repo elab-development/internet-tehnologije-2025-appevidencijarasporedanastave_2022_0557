@@ -1,5 +1,27 @@
-import prisma from '../utils/prisma.js'
+import prisma from "../utils/prisma.js";
 import bcrypt from "bcrypt";
+
+export const getAllUsers = () => {
+  return prisma.user.findMany({
+    where: {
+      role: {
+        not: 'ADMIN'
+      }
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      username: true,
+      role: true,
+      studentIndex: true,
+      studyYear: true,
+      idGroup: true,
+      createdAt: true,
+    },
+  });
+};
 
 export const getUserById = async (id) => {
   return prisma.user.findUnique({
@@ -14,11 +36,10 @@ export const getUserById = async (id) => {
       studentIndex: true,
       studyYear: true,
       idGroup: true,
-      createdAt: true
-    }
+      createdAt: true,
+    },
   });
 };
-
 
 export const updateUser = async (userId, data) => {
   const updateData = {};
@@ -59,17 +80,17 @@ export const searchUsers = async ({ role, name }) => {
       role,
       ...(name && {
         OR: [
-          { firstName: { contains: name, mode: 'insensitive' } },
-          { lastName: { contains: name, mode: 'insensitive' } }
-        ]
-      })
+          { firstName: { contains: name, mode: "insensitive" } },
+          { lastName: { contains: name, mode: "insensitive" } },
+        ],
+      }),
     },
     select: {
       id: true,
       firstName: true,
       lastName: true,
       email: true,
-      role: true
-    }
+      role: true,
+    },
   });
 };

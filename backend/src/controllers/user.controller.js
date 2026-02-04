@@ -1,6 +1,16 @@
 import * as userService from '../services/user.service.js';
 import { success, error } from '../utils/response.js';
 
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+
+    return success(res, users, 'Users fetched successfully');
+  } catch (err) {
+    return error(res, err.message);
+  }
+};
+
 export const getMyProfile = async (req, res) => {
   try {
     const user = await userService.getUserById(req.user.id);

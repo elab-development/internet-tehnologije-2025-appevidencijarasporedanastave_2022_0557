@@ -7,7 +7,7 @@ export const getMyTerms = async (req, res) => {
     const user = await userService.getUserById(req.user.id);
     let terms;
     if (user.role === "STUDENT") {
-      terms = await termService.getStudentTerms(user.idGroup);
+      terms = await termService.getStudentTerms(user.idGroup,user.id);
     } else if (user.role === "PROFESSOR") {
       terms = await termService.getProfessorTerms(user.id);
     } else {
