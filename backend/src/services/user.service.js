@@ -5,8 +5,8 @@ export const getAllUsers = () => {
   return prisma.user.findMany({
     where: {
       role: {
-        not: 'ADMIN'
-      }
+        not: "ADMIN",
+      },
     },
     select: {
       id: true,
@@ -33,11 +33,11 @@ export const createUser = async (data) => {
     role,
     studentIndex,
     studyYear,
-    idGroup
+    idGroup,
   } = data;
 
   if (!firstName || !lastName || !email || !username || !password || !role) {
-    throw new Error('Missing required fields');
+    throw new Error("Missing required fields");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,9 +50,9 @@ export const createUser = async (data) => {
       username,
       password: hashedPassword,
       role,
-      studentIndex: role === 'STUDENT' ? studentIndex : null,
-      studyYear: role === 'STUDENT' ? studyYear : null,
-      idGroup: role === 'STUDENT' ? idGroup : null
+      studentIndex: role === "STUDENT" ? studentIndex : null,
+      studyYear: role === "STUDENT" ? studyYear : null,
+      idGroup: role === "STUDENT" ? idGroup : null,
     },
     select: {
       id: true,
@@ -64,8 +64,8 @@ export const createUser = async (data) => {
       studentIndex: true,
       studyYear: true,
       idGroup: true,
-      createdAt: true
-    }
+      createdAt: true,
+    },
   });
 };
 
@@ -114,7 +114,12 @@ export const updateUser = async (userId, data) => {
 };
 
 export const deleteUser = async (userId) => {
-  const id = Number(userId);
+  const id = parseInt(userId, 10);
+  if (isNaN(id)) {
+    throw new Error("Invalid user ID");
+  }
+
+
   await prisma.user.delete({
     where: { id },
   });

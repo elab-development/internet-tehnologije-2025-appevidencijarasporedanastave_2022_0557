@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { getUserRole } from "../utils/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const role = getUserRole();
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return !!localStorage.getItem("token");
@@ -26,9 +28,15 @@ const Navbar = () => {
             <Link to="/profile" className="hover:underline">
               Profile
             </Link>
-            <Link to="/terms" className="hover:underline">
-              Terms
-            </Link>
+            {(role === "STUDENT" || role === "PROFESSOR") && (
+              <Link to="/schedule">My Schedule</Link>
+            )}
+
+            {role === "ADMIN" && (
+              <>
+                <Link to="/users">Users</Link>
+              </>
+            )}
           </>
         )}
 

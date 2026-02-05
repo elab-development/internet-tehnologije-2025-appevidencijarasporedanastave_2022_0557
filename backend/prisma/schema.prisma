@@ -70,7 +70,7 @@ model Term {
   idGroup     Int
 
   subject     Subject   @relation(fields: [subjectId], references: [id])
-  professor   User      @relation(fields: [professorId], references: [id])
+  professor   User      @relation(fields: [professorId], references: [id], onDelete: Cascade)
   attendances Attendance[]
 }
 
@@ -81,7 +81,7 @@ model Attendance {
   status      AttendanceStatus
   checkedInAt DateTime         @default(now())
 
-  user        User             @relation(fields: [userId], references: [id])
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   term        Term             @relation(fields: [termId], references: [id])
 
   @@unique([userId, termId])

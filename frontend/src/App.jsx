@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar";
 import LoginForm from "./components/LoginForm";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminUsers from "./components/AdminUsers";
+import StudentSchedule from "./components/StudentSchedule";
 
 function App() {
   return (
@@ -19,6 +21,23 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/schedule"
+          element={
+            <ProtectedRoute>
+              <StudentSchedule />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/schedule/:userId" element={<StudentSchedule />} />
       </Routes>
     </Router>
   );
