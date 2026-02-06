@@ -7,6 +7,7 @@ import {
   getMyProfile,
   getAllUsers,
   createUser,
+  getAllProfessors,
 } from "../controllers/user.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { authorizeAdmin } from "../middlewares/role.middleware.js";
@@ -21,6 +22,7 @@ router.get("/search", authenticate, authorizeAdmin, searchUsers);
 
 router.get("/me", authenticate, getMyProfile);
 router.get("/", authenticate, authorizeAdmin, getAllUsers);
+router.get("/professors", authenticate, authorizeAdmin, getAllProfessors);
 
 router.post("/", authenticate, authorizeAdmin, createUser);
 

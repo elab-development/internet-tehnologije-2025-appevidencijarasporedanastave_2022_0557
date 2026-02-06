@@ -11,6 +11,15 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+export const getAllProfessors = async (req, res) => {
+  try {
+    const users = await userService.getAllProfessors();
+    return success(res, users, "Professors fetched successfully");
+  } catch (err) {
+    return error(res, err.message);
+  }
+};
+
 export const createUser = async (req, res) => {
   try {
     const user = await userService.createUser(req.body);

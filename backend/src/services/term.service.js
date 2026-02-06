@@ -21,7 +21,7 @@ export const getPresentCountForTerm = async (termId) => {
 };
 
 export const createTermWithAttendance = async (data) => {
-  const {
+  let {
     subjectId,
     professorId,
     date,
@@ -31,6 +31,15 @@ export const createTermWithAttendance = async (data) => {
     type,
     idGroup,
   } = data;
+
+  const addOneHour = (isoString) => {
+    const d = new Date(isoString);
+    d.setHours(d.getHours() + 1);
+    return d.toISOString();
+  };
+
+  startTime = addOneHour(startTime);
+  endTime = addOneHour(endTime);
 
   return prisma.$transaction(async (tx) => {
     const term = await tx.term.create({

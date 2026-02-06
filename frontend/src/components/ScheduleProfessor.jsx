@@ -24,17 +24,26 @@ const ScheduleProfessor = () => {
         },
       });
 
-      const mapped = res.data.data.map((item) => ({
-        id: item.id,
-        termId: item.termId,
-        title: `${item.subject.name} (${item.startTime.slice(
-          11,
-          16
-        )} - ${item.endTime.slice(11, 16)})`,
-        start: item.startTime,
-        end: item.endTime,
-        extendedProps: item,
-      }));
+      const mapped = res.data.data
+        .map((item) => {
+          const term = item;
+
+          if (!term.startTime || !term.endTime) return null;
+
+          return {
+            id: term.id,
+            title: `${
+              term.subject?.name ?? "Unknown subject"
+            } (${term.startTime.slice(11, 16)} - ${term.endTime.slice(
+              11,
+              16
+            )})`,
+            start: term.startTime,
+            end: term.endTime,
+            extendedProps: term,
+          };
+        })
+        .filter(Boolean);
 
       setEvents(mapped);
     } catch (err) {
@@ -43,7 +52,6 @@ const ScheduleProfessor = () => {
   };
 
   const fetchTermStatistics = async (termId) => {
-    console.log("termin id = " + termId);
     try {
       setLoadingStats(true);
       setTermStats(null);
@@ -71,9 +79,10 @@ const ScheduleProfessor = () => {
 
   const handleEventClick = (info) => {
     const term = info.event.extendedProps;
+
     setSelectedTerm(term);
     setIsModalOpen(true);
-    fetchTermStatistics(term.termId);
+    fetchTermStatistics(term.id);
   };
 
   return (
@@ -104,13 +113,12 @@ const ScheduleProfessor = () => {
             </h2>
 
             <p className="text-sm text-gray-600 mb-4">
-              {selectedTerm.startTime.slice(0, 16).replace("T", " ")} –{" "}
+              {selectedTerm.startTime.slice(11, 16)} –{" "}
               {selectedTerm.endTime.slice(11, 16)}
             </p>
 
             <div className="mb-4">
               {loadingStats && <p>Loading...</p>}
-
               {!loadingStats && !termStats && <p>No statistics available.</p>}
             </div>
 

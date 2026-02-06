@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import termRoutes from "./routes/term.routes.js";
 import attendanceRoutes from "./routes/attendence.routes.js";
+import subjectRoutes from "./routes/subject.routes.js"
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/terms", termRoutes);
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/subjects",subjectRoutes);
 
 export default app;

@@ -15,6 +15,7 @@ const ScheduleUser = () => {
   const [termStats, setTermStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const fetchEvents = async () => {
     if (!userId) return;
 
@@ -25,18 +26,23 @@ const ScheduleUser = () => {
         },
       });
 
-      console.log("RAW data:", res.data);
+      const mapped = res.data.data
+        .map((item) => {
+          const term = item.term ?? item;
 
-      const mapped = res.data.data.map((item) => ({
-        id: item.id,
-        title: `${item.term?.subject?.name} (${item.term?.startTime?.slice(
-          11,
-          16
-        )} - ${item.term?.endTime?.slice(11, 16)})`,
-        start: item.term?.startTime,
-        end: item.term?.endTime,
-        extendedProps: item,
-      }));
+          if (!term.startTime || !term.endTime) return null;
+
+          return {
+            id: term.id,
+            title: `${term.subject?.name ?? "Unknown subject"} (${
+              term.startTime.slice(11, 16)
+            } - ${term.endTime.slice(11, 16)})`,
+            start: term.startTime,
+            end: term.endTime,
+            extendedProps: term,
+          };
+        })
+        .filter(Boolean);
 
       setEvents(mapped);
     } catch (err) {
@@ -50,7 +56,6 @@ const ScheduleUser = () => {
 
   const fetchTermStatistics = async (termId) => {
     try {
-      console.log(termId);
       setLoadingStats(true);
       setTermStats(null);
 
@@ -75,7 +80,7 @@ const ScheduleUser = () => {
     const term = info.event.extendedProps;
     setSelectedTerm(term);
     setIsModalOpen(true);
-    fetchTermStatistics(term.termId);
+    fetchTermStatistics(term.id);
   };
 
   return (
@@ -104,14 +109,15 @@ const ScheduleUser = () => {
             </h2>
 
             <p className="text-sm text-gray-600 mb-4">
-              {selectedTerm.term?.startTime?.slice(11, 16) || "??:??"} –{" "}
-              {selectedTerm.term?.endTime?.slice(11, 16) || "??:??"}
+              {selectedTerm.startTime.slice(11, 16)} –{" "}
+              {selectedTerm.endTime.slice(11, 16)}
             </p>
 
             <div className="mb-4">
               {loadingStats && <p>Loading...</p>}
-
-              {!loadingStats && !termStats && <p>No statistics available.</p>}
+              {!loadingStats && !termStats && (
+                <p>No statistics available.</p>
+              )}
             </div>
             <div className="border-t pt-4">
               <ProfessorAttendance stats={termStats} />

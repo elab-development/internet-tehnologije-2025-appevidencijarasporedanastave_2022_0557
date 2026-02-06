@@ -8,6 +8,7 @@ import AdminUsers from "./components/AdminUsers";
 import ScheduleStudent from "./components/ScheduleStudent";
 import ScheduleProfessor from "./components/ScheduleProfessor";
 import ScheduleUser from "./components/ScheduleUser";
+import AddTerm from "./components/AddTerm";
 
 function App() {
   return (
@@ -50,7 +51,7 @@ function App() {
         <Route
           path="/schedule-admin"
           element={
-            <ProtectedRoute>{/* <ScheduleProfessor /> */}</ProtectedRoute>
+            <ProtectedRoute>{<AddTerm/>}</ProtectedRoute>
           }
         />
 
