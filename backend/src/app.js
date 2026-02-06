@@ -17,6 +17,6 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/terms", termRoutes);
-app.use("/api/attendence", attendanceRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 export default app;

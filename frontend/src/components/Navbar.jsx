@@ -28,8 +28,9 @@ const Navbar = () => {
             <Link to="/profile" className="hover:underline">
               Profile
             </Link>
-            {(role === "STUDENT" || role === "PROFESSOR") && (
-              <Link to="/schedule">My Schedule</Link>
+            {role === "STUDENT" && <Link to="/schedule">My Schedule</Link>}
+            {role === "PROFESSOR" && (
+              <Link to="/schedule-professor">My Schedule</Link>
             )}
 
             {role === "ADMIN" && (

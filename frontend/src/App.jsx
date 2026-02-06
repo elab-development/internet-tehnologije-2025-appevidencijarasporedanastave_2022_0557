@@ -5,7 +5,8 @@ import LoginForm from "./components/LoginForm";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminUsers from "./components/AdminUsers";
-import StudentSchedule from "./components/StudentSchedule";
+import ScheduleStudent from "./components/ScheduleStudent";
+import ScheduleProfessor from "./components/ScheduleProfessor";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
           path="/schedule"
           element={
             <ProtectedRoute>
-              <StudentSchedule />
+              <ScheduleStudent />
             </ProtectedRoute>
           }
         />
@@ -37,7 +38,16 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/schedule/:userId" element={<StudentSchedule />} />
+        <Route
+          path="/schedule-professor"
+          element={
+            <ProtectedRoute>
+              <ScheduleProfessor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/schedule/:userId" element={<ScheduleStudent />} />
       </Routes>
     </Router>
   );

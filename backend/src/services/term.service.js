@@ -1,5 +1,25 @@
 import prisma from "../utils/prisma.js";
 
+export const getPresentCountForTerm = async (termId) => {
+  const term = await prisma.term.findUnique({
+    where: { id: Number(termId) },
+    select: { id: true },
+  });
+
+  if (!term) {
+    throw new Error("Term not found");
+  }
+
+  const presentCount = await prisma.attendance.count({
+    where: {
+      termId: term.id,
+      status: "PRESENT",
+    },
+  });
+
+  return presentCount;
+};
+
 export const createTermWithAttendance = async (data) => {
   const {
     subjectId,
@@ -9,7 +29,7 @@ export const createTermWithAttendance = async (data) => {
     endTime,
     classroom,
     type,
-    idGroup
+    idGroup,
   } = data;
 
   return prisma.$transaction(async (tx) => {
@@ -22,25 +42,25 @@ export const createTermWithAttendance = async (data) => {
         endTime,
         classroom,
         type,
-        idGroup
-      }
+        idGroup,
+      },
     });
 
     const students = await tx.user.findMany({
       where: {
-        role: 'STUDENT',
-        idGroup
+        role: "STUDENT",
+        idGroup,
       },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (students.length > 0) {
       await tx.attendance.createMany({
-        data: students.map(student => ({
+        data: students.map((student) => ({
           userId: student.id,
           termId: term.id,
-          status: 'NOT_SELECTED'
-        }))
+          status: "NOT_SELECTED",
+        })),
       });
     }
 
@@ -48,8 +68,8 @@ export const createTermWithAttendance = async (data) => {
   });
 };
 
-export const getStudentTerms = async (groupId,userId) => {
-  console.log("groupd id is = " + groupId);
+export const getStudentTerms = async (groupId, userId) => {
+  console.log("groupid is = " + groupId);
   if (!groupId) return [];
 
   return prisma.attendance.findMany({
@@ -57,6 +77,17 @@ export const getStudentTerms = async (groupId,userId) => {
       userId,
       term: {
         idGroup: groupId,
+      },
+    },
+    include: {
+      term: {
+        include: {
+          subject: {
+            select: {
+              name: true,
+            },
+          },
+        },
       },
     },
   });
