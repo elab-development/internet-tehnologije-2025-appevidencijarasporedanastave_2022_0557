@@ -7,7 +7,7 @@ import axios from "axios";
 import { getUserRole } from "../utils/auth";
 import AttendanceModal from "./AttendanceModal";
 
-const Schedule = () => {
+const ScheduleStudent = () => {
   const [events, setEvents] = useState([]);
   const [selectedTerm, setSelectedTerm] = useState(null);
   const role = getUserRole();
@@ -91,8 +91,13 @@ const Schedule = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Schedule</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Schedule</h1>
 
+        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Google Calendar
+        </button>
+      </div>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -119,4 +124,4 @@ const Schedule = () => {
   );
 };
 
-export default Schedule;
+export default ScheduleStudent;

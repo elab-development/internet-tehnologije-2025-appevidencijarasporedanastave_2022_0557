@@ -11,3 +11,15 @@ export const getUserRole = () => {
     return null;
   }
 };
+
+export const getUserId = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.id;
+  } catch {
+    return null;
+  }
+};

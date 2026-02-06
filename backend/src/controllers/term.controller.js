@@ -52,3 +52,24 @@ export const getMyTerms = async (req, res) => {
     return error(res, err.message);
   }
 };
+
+export const getTermsByUser = async (req, res) => {
+  try {
+    console.log("id " + req.params.id);
+    const user = await userService.getUserById(Number(req.params.id));
+    console.log("user");
+    console.log(user);
+    let terms;
+    if (user.role === "STUDENT") {
+      terms = await termService.getStudentTerms(user.idGroup, user.id);
+    } else if (user.role === "PROFESSOR") {
+      terms = await termService.getProfessorTerms(user.id);
+    } else {
+      return error(res, "Role not supported for this action", 403);
+    }
+
+    return success(res, terms, "Terms fetched successfully");
+  } catch (err) {
+    return error(res, err.message);
+  }
+};
