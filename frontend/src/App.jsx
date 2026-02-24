@@ -9,6 +9,7 @@ import ScheduleStudent from "./components/ScheduleStudent";
 import ScheduleProfessor from "./components/ScheduleProfessor";
 import ScheduleUser from "./components/ScheduleUser";
 import AddTerm from "./components/AddTerm";
+import ProfessorAttendanceChart from "./components/ProffesorAttendanceChart"
 
 function App() {
   return (
@@ -49,10 +50,16 @@ function App() {
           }
         />
         <Route
-          path="/schedule-admin"
+          path="/chart-professor"
           element={
-            <ProtectedRoute>{<AddTerm/>}</ProtectedRoute>
+            <ProtectedRoute>
+              <ProfessorAttendanceChart />
+            </ProtectedRoute>
           }
+        />
+        <Route
+          path="/schedule-admin"
+          element={<ProtectedRoute>{<AddTerm />}</ProtectedRoute>}
         />
 
         <Route path="/schedule/:userId" element={<ScheduleUser />} />

@@ -44,6 +44,10 @@ model User {
   studyYear     Int?
   idGroup       Int?
 
+  googleAccessToken  String?
+  googleRefreshToken String?
+  googleTokenExpiry  DateTime?
+
   terms         Term[]
   attendances   Attendance[]
 

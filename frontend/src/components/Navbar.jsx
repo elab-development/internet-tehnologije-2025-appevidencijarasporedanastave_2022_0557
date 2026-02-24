@@ -28,15 +28,32 @@ const Navbar = () => {
             <Link to="/profile" className="hover:underline">
               Profile
             </Link>
-            {role === "STUDENT" && <Link to="/schedule">My Schedule</Link>}
+
+            {role === "STUDENT" && (
+              <Link to="/schedule" className="hover:underline">
+                My Schedule
+              </Link>
+            )}
+
             {role === "PROFESSOR" && (
-              <Link to="/schedule-professor">My Schedule</Link>
+              <>
+                <Link to="/schedule-professor" className="hover:underline">
+                  My Schedule
+                </Link>
+                <Link to="/chart-professor" className="hover:underline">
+                  Attendance Stats
+                </Link>
+              </>
             )}
 
             {role === "ADMIN" && (
               <>
-                <Link to="/schedule-admin">Schedule</Link>
-                <Link to="/users">Users</Link>
+                <Link to="/schedule-admin" className="hover:underline">
+                  Schedule
+                </Link>
+                <Link to="/users" className="hover:underline">
+                  Users
+                </Link>
               </>
             )}
           </>
